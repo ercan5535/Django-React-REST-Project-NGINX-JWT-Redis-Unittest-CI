@@ -4,7 +4,10 @@ It is a case study for Django REST micro service architecture with JWT authentic
 Cookies are used for Token Read/Write operations.
 <br>
 <br>
-<img src="https://github.com/ercan5535/Django-REST-Project-NGINX-JWT/assets/67562422/3ec9a303-a69f-48a9-94b3-79b6d3b5c4ff" width="500" height="400">
+<div align="center">
+  <img src="https://github.com/ercan5535/Django-REST-Project-NGINX-JWT/assets/67562422/3ec9a303-a69f-48a9-94b3-79b6d3b5c4ff" width="500" height="400">
+</div>
+
 <br>
 
 ### API Gateway
