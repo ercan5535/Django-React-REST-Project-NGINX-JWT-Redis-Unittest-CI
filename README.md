@@ -12,7 +12,7 @@ Cookies are used for Token operations.
 
 ### API Gateway
 - Serves static files
-- Redirect reqeusts to relevant service
+- Redirects reqeusts to relevant service
 
 ### Auth Service
 - Responsible for User Register/Login/Logut
