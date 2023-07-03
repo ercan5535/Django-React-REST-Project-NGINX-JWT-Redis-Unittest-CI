@@ -35,7 +35,7 @@ class TransactionView(APIView):
     # Get all transactions
     @token_required
     def get(self, request):
-        obj = Transaction.objects.all()
+        obj = Transaction.objects.all().order_by('-created_at')
         serializer = TransactionSerializer(obj, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
