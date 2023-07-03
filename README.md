@@ -1,7 +1,7 @@
 # Description
 
 It is a case study for Django REST micro service architecture with JWT authentication.<br>
-Cookies are used for Token operations.
+Cookies are used for Token operations.11
 <br>
 <br>
 <div align="center">
