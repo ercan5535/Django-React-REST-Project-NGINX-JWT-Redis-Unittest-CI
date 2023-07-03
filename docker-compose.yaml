@@ -1,0 +1,98 @@
+version: '3'
+services:
+  redis:
+    image: redis:alpine3.18
+    container_name: redis
+    expose:
+      - "6379"
+    networks:
+      - cache_network
+  user_db:
+    image: postgres:alpine3.18
+    restart: always
+    environment:
+      POSTGRES_DB: "users_database"
+      POSTGRES_USER: "user_db_username"
+      POSTGRES_PASSWORD: "user_db_password"
+    expose:
+      - "5432"
+    networks:
+      - user_db_network
+  auth_service:
+    container_name: auth_service
+    build: ./auth_service
+    expose:
+      - "8000"
+    environment:
+      REDIS_HOST: "redis"
+      REDIS_PORT: "6379"
+      DB_HOST: "user_db"
+      DB_PORT: "5432"
+      DB_NAME: "users_database"
+      DB_USER: "user_db_username"
+      DB_PASSWORD: "user_db_password"
+    command: >
+      sh -c "python check_db.py &&
+             python auth_service/manage.py makemigrations &&
+             python auth_service/manage.py migrate &&
+             python auth_service/manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - redis
+      - user_db
+    networks:
+      - user_db_network
+      - auth_network
+      - cache_network
+  transaction_db:
+    image: postgres:alpine3.18
+    restart: always
+    environment:
+      POSTGRES_DB: "transaction_database"
+      POSTGRES_USER: "transaction_db_username"
+      POSTGRES_PASSWORD: "transaction_db_password"
+    expose:
+      - "5432"
+    networks:
+      - transaction_db_network
+  transaction_service:
+    container_name: transaction_service
+    build: ./transaction_service
+    expose:
+      - "8001"
+    environment:
+      REDIS_HOST: "redis"
+      REDIS_PORT: "6379"
+      DB_HOST: "transaction_db"
+      DB_PORT: "5432"
+      DB_NAME: "transaction_database"
+      DB_USER: "transaction_db_username"
+      DB_PASSWORD: "transaction_db_password"
+    command: >
+      sh -c "python check_db.py &&
+             python transaction_service/manage.py makemigrations &&
+             python transaction_service/manage.py migrate &&
+             python transaction_service/manage.py runserver 0.0.0.0:8001"
+    networks:
+      - transaction_db_network
+      - transaction_network
+      - cache_network
+    depends_on:
+      - redis
+      - transaction_db
+  api_gateway:
+    container_name: api_gateway
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - auth_service
+      - transaction_service
+    networks:
+      - auth_network
+      - transaction_network
+networks:
+  auth_network:
+  transaction_network:
+  cache_network:
+  transaction_db_network:
+  user_db_network:
