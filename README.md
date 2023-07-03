@@ -1,7 +1,7 @@
 # Description
 
 It is a case study for Django REST micro service architecture with JWT authentication.<br>
-Cookies are used for Token Read/Write operations.
+Cookies are used for Token operations.
 <br>
 <br>
 <div align="center">
@@ -15,12 +15,16 @@ Cookies are used for Token Read/Write operations.
 - Redirect reqeusts to relevant service
 
 ### Auth Service
-- Responsible for User Register/Login/Logut and Create/Refresh/Store/Blacklist JWT.
+- Responsible for User Register/Login/Logut
+- Responsible for Create/Refresh/Store/Blacklist JWT
+- JWT parameters defined on settings.py
+- JWT operations handled by jwt_helper.py
 
 ### Transactions Service
 - Responsible for CRUD operations.
+- Authenticate and Authorize(Only managers accounts can confirm Transactions) by checking tokens on cache
 
-### Redis Cache
-- Caching (Tokens, UserData) pairs
-- Caching JWT Access tokens for validation from Transaction Service
-- Caching JWT Refresh tokens for blacklisting Refresh tokens
+### Cache
+- Holds (Tokens, UserData) pairs
+- Holds JWT Access tokens for validation from Transaction Service
+- Holds JWT Refresh tokens for blacklisting Refresh tokens
