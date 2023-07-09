@@ -24,3 +24,9 @@ jobs:
     - name: Run Tests for Auth Service
       run: |
         python auth_service/auth_service/manage.py test authentication
+    - name: Install Dependencies for Transaction Service
+      run: |
+        pip install -r transaction_service/requirements.txt
+    - name: Run Tests for Transaction Service
+      run: |
+        python transaction_service/transactions/manage.py test transactions
