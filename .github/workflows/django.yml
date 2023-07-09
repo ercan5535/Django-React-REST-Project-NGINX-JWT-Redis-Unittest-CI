@@ -23,4 +23,4 @@ jobs:
         pip install -r auth_service/requirements.txt
     - name: Run Tests for Auth Service
       run: |
-        python auth_service/auth_service/manage.py test
+        python auth_service/auth_service/manage.py authentication test
