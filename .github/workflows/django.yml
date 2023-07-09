@@ -29,4 +29,4 @@ jobs:
         pip install -r transaction_service/requirements.txt
     - name: Run Tests for Transaction Service
       run: |
-        python transaction_service/transactions/manage.py test transactions
+        python transaction_service/transaction_service/manage.py test transactions
