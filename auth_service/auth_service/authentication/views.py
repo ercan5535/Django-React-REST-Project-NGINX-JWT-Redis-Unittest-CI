@@ -136,15 +136,20 @@ class CheckLoginStatus(APIView):
 
         user_data = cache.get(access_token)
 
-        return Response(user_data, status=status.HTTP_201_CREATED)
+        return Response(user_data, status=status.HTTP_200_OK)
 
 class Logout(APIView):
     def get(self, request):
         access_token = request.COOKIES.get('access_token')
         refresh_token = request.COOKIES.get('refresh_token')
 
-        # Check access token is in cookie and access token is in Redis
-        if access_token is not None and cache.has_key(access_token):
+        # Check access token is in cookie
+        if access_token is None: 
+            message = {"message": "Token is not found in cookie"}
+            return Response(message, status=status.HTTP_401_UNAUTHORIZED)
+        
+        #  Check access token is in Redis
+        if cache.has_key(access_token):
             # Delete access token from Redis
             cache.delete(access_token)
         
@@ -153,13 +158,20 @@ class Logout(APIView):
             # Ensure refresh token is valid
             try:
                 payload = get_jwt_payload(refresh_token)
+                # Check refresh token is not in Redis(not blacklisted)
+                if not cache.has_key(refresh_token):
+                    # Add refresh token to Redis blacklist
+                    refresh_token_lifetime = payload["exp"] - time.time()
+                    cache.set(refresh_token, payload["user_id"], refresh_token_lifetime)
             except Exception as e:
+                # Create response object
                 message = {"message": "Invalid Refresh Token, " + str(e)}
-                return Response(message, status=status.HTTP_401_UNAUTHORIZED)
-            # Check refresh token is not in Redis(Blacklist)
-            if not cache.has_key(refresh_token):
-                # Add refresh token to Redis blacklist
-                cache.set(refresh_token, payload["user_id"])
+                response = Response(message, status=status.HTTP_401_UNAUTHORIZED)
+                # Delete access token from cookie
+                response.delete_cookie('access_token')
+                # Delete refresh token from cookie
+                response.delete_cookie('refresh_token')
+                return response
 
         # Create response object
         message = {"message": "Logged out successfully!"}
