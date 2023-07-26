@@ -37,7 +37,8 @@ JWT = {
 - Holds JWT Refresh tokens for blacklisting Refresh tokens
 
 ### Front-End
-- It is a simple single page application
+- It is a simple single page application.
+- There are 2 versions, First I done with vanilla js then I added react version after I learnt react.
 - Login, Register, All Transactions, Add Transaction and Transaction Details Pages are available
 - Update, Delete, Confirm operations are can be done on Transaction Details Page
 
@@ -46,4 +47,5 @@ JWT = {
 docker-compose up 
 ```
 command is enough to run all services <br>
-NGINX will listen localhost:80 for serving home page
+NGINX will listen localhost:80 for serving react app
+also localhost:80/vanilla/ is up for first version.
