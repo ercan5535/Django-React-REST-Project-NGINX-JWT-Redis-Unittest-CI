@@ -47,5 +47,5 @@ JWT = {
 docker-compose up 
 ```
 command is enough to run all services <br>
-NGINX will listen localhost:80 for serving react app
+NGINX will listen localhost:80 for serving react app <br>
 also localhost:80/vanilla/ is up for first version.
